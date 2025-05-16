@@ -1,0 +1,44 @@
+{
+	"name": "ds_fixed_items_output_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_items",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "items-fixed.csv",
+				"container": "output"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Cucumber",
+				"type": "String"
+			},
+			{
+				"name": "1.24",
+				"type": "String"
+			},
+			{
+				"name": "cucumber",
+				"type": "String"
+			},
+			{
+				"name": "items",
+				"type": "String"
+			},
+			{
+				"name": "a1c76a6e-4e95-4a25-8d41-943547e7db10",
+				"type": "String"
+			}
+		]
+	}
+}
