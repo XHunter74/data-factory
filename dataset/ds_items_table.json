@@ -1,0 +1,15 @@
+{
+	"name": "ds_items_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_table_items",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "items"
+		}
+	}
+}
