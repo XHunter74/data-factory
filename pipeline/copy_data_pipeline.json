@@ -20,7 +20,10 @@
 						"additionalColumns": [
 							{
 								"name": "NormalizedName",
-								"value": "toLower(trim(Name))"
+								"value": {
+									"value": "toLower(trim(Name))",
+									"type": "Expression"
+								}
 							}
 						],
 						"storeSettings": {
@@ -42,6 +45,24 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
+							{
+								"sink": {
+									"name": "PartitionKey",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "RowKey",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Timestamp",
+									"type": "DateTimeOffset"
+								}
+							},
 							{
 								"source": {
 									"name": "Name",
