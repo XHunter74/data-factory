@@ -27,7 +27,8 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(RowKey = uuid(),",
-				"          PartitionKey = items) ~> derivedColumn1"
+				"          PartitionKey = \"items\",",
+				"          NormalizedName = lower(trim(Name))) ~> derivedColumn1"
 			]
 		}
 	}
