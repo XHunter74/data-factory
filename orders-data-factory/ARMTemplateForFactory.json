@@ -34,6 +34,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "*",
 						"container": "output"
 					},
 					"columnDelimiter": ",",
@@ -42,6 +43,15 @@
 					"quoteChar": "\""
 				},
 				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
 					{
 						"type": "String"
 					},
@@ -156,7 +166,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_fixed_items_csv",
+								"referenceName": "ds_fixed_items_json",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -175,14 +185,13 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 derive(Name = lower(trim(Name))) ~> derivedColumn1",
+						"source1 derive(NormalizedName = lower(trim(Name)),",
+						"          PartitionKey = \"items\",",
+						"          RowKey = uuid()) ~> derivedColumn1",
 						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          Column_1 as string,",
-						"          Column_2 as string",
-						"     ),",
-						"     partitionFileNames:['items-fixed.csv'],",
+						"     partitionFileNames:['items-fixed.json'],",
+						"     truncate: true,",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> sink1"
@@ -191,7 +200,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_items_csv')]",
-				"[concat(variables('factoryId'), '/datasets/ds_fixed_items_csv')]"
+				"[concat(variables('factoryId'), '/datasets/ds_fixed_items_json')]"
 			]
 		},
 		{
@@ -220,7 +229,8 @@
 								"datasetParameters": {
 									"source1": {},
 									"sink1": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -229,6 +239,101 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureTableSink",
+								"azureTableInsertType": "merge",
+								"azureTableDefaultPartitionKeyValue": "items",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['Name']"
+										},
+										"sink": {
+											"name": "Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['Price']"
+										},
+										"sink": {
+											"name": "Price",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"path": "$['NormalizedName']"
+										},
+										"sink": {
+											"name": "NormalizedName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['RowKey']"
+										},
+										"sink": {
+											"name": "RowKey",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_fixed_items_output_json",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_items_table",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -237,7 +342,124 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_csv_to_table')]"
+				"[concat(variables('factoryId'), '/dataflows/df_csv_to_table')]",
+				"[concat(variables('factoryId'), '/datasets/ds_fixed_items_output_json')]",
+				"[concat(variables('factoryId'), '/datasets/ds_items_table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_fixed_items_output_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_items",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "items-fixed.json",
+						"container": "output"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "Price",
+						"type": "String"
+					},
+					{
+						"name": "NormalizedName",
+						"type": "String"
+					},
+					{
+						"name": "PartitionKey",
+						"type": "String"
+					},
+					{
+						"name": "RowKey",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_items')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_fixed_items_json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_items",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "output"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_items')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_fixed_items_output_json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_blob_items",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "items-fixed.json",
+						"container": "output"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"Name": {
+							"type": "string"
+						},
+						"Price": {
+							"type": "number"
+						},
+						"NormalizedName": {
+							"type": "string"
+						},
+						"PartitionKey": {
+							"type": "string"
+						},
+						"RowKey": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_blob_items')]"
 			]
 		}
 	]
