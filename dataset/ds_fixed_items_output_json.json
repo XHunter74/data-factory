@@ -1,0 +1,38 @@
+{
+	"name": "ds_fixed_items_output_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_items",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "items-fixed.json",
+				"container": "output"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"Name": {
+					"type": "string"
+				},
+				"Price": {
+					"type": "number"
+				},
+				"NormalizedName": {
+					"type": "string"
+				},
+				"PartitionKey": {
+					"type": "string"
+				},
+				"RowKey": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
