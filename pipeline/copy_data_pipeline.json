@@ -17,6 +17,12 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "NormalizedName",
+								"value": "toLower(trim(Name))"
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
@@ -44,6 +50,16 @@
 								},
 								"sink": {
 									"name": "Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "NormalizedName",
+									"type": "String"
+								},
+								"sink": {
+									"name": "NormalizedName",
 									"type": "String"
 								}
 							},
