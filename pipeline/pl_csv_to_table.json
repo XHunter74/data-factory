@@ -29,7 +29,14 @@
 			{
 				"name": "Copy data1",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Data flow1",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -58,69 +65,6 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "Cucumber",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "PartitionKey",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "1.24",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "RowKey",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cucumber",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "Timestamp",
-									"type": "DateTimeOffset"
-								}
-							},
-							{
-								"source": {
-									"name": "items",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "Name",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "a1c76a6e-4e95-4a25-8d41-943547e7db10",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "NormalizedName",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Price",
-									"type": "Double"
-								}
-							}
-						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
