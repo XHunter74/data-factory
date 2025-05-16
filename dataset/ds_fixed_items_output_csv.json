@@ -20,23 +20,23 @@
 		},
 		"schema": [
 			{
-				"name": "Cucumber",
+				"name": "Name",
 				"type": "String"
 			},
 			{
-				"name": "1.24",
+				"name": "Price",
 				"type": "String"
 			},
 			{
-				"name": "cucumber",
+				"name": "NormalizedName",
 				"type": "String"
 			},
 			{
-				"name": "items",
+				"name": "PartitionKey",
 				"type": "String"
 			},
 			{
-				"name": "a1c76a6e-4e95-4a25-8d41-943547e7db10",
+				"name": "RowKey",
 				"type": "String"
 			}
 		]

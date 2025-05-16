@@ -47,6 +47,7 @@
 				"          Column_5 as string",
 				"     ),",
 				"     partitionFileNames:['items-fixed.csv'],",
+				"     truncate: true,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink1"
