@@ -12,7 +12,11 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumn1"
@@ -28,7 +32,12 @@
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(RowKey = uuid(),",
 				"          PartitionKey = \"items\",",
-				"          NormalizedName = lower(trim(Name))) ~> derivedColumn1"
+				"          NormalizedName = lower(trim(Name))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1) ~> sink1"
 			]
 		}
 	}
