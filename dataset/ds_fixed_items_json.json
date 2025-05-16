@@ -1,0 +1,18 @@
+{
+	"name": "ds_fixed_items_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_items",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "output"
+			}
+		},
+		"schema": {}
+	}
+}

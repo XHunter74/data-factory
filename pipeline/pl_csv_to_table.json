@@ -48,9 +48,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"value": "$$FILEPATH"
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -74,7 +80,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_fixed_items_output_csv",
+						"referenceName": "ds_fixed_items_csv",
 						"type": "DatasetReference"
 					}
 				],
