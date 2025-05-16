@@ -35,7 +35,6 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(NormalizedName = lower(trim(Name)),",
-				"          PartitionKey = \"items\",",
 				"          RowKey = uuid()) ~> derivedColumn1",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
