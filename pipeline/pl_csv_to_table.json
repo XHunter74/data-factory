@@ -60,6 +60,7 @@
 					"sink": {
 						"type": "AzureTableSink",
 						"azureTableInsertType": "merge",
+						"azureTableDefaultPartitionKeyValue": "items",
 						"writeBatchSize": 10000
 					},
 					"enableStaging": false,
@@ -90,15 +91,6 @@
 								},
 								"sink": {
 									"name": "NormalizedName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "$['PartitionKey']"
-								},
-								"sink": {
-									"name": "PartitionKey",
 									"type": "String"
 								}
 							},
