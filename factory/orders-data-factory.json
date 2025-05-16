@@ -1,0 +1,9 @@
+{
+	"name": "orders-data-factory",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "ef8e2692-32a7-45bb-9558-83d26338ee40",
+		"tenantId": "0b79f168-3b2a-4f71-8b18-a5fe91b31363"
+	}
+}
